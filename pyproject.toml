@@ -1,0 +1,8 @@
+[project]
+name = "master-thesis"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.32.5",
+    "setuptools>=80.9.0",
+]
