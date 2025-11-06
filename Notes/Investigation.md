@@ -55,8 +55,16 @@ idea for IP address, we dont even need 256 bytes, we only need 16 items to be ou
 
 Specialized Tokenizer: By seeing 192.168 together thousands of times in network logs, the tokenizer learns that this is a meaningful chunk, a "word" in the language of networking. The model then learns that the token T_192.168 is associated with private, local networks, which is a powerful piece of information.
 
-what is BGP routing table,  BGP message , 
+## Questions
 
-```
-   https://data.ris.ripe.net/rrc03/2025.10/updates.20251014.0000.gz
-```
+Can I use different tokenizers at the same time? Normally use natural language tokenizer, but when it comes to X-data, use the X-tokenizer for that data. 
+
+Do I really need tokenizer? Since all data are well-structured, why we cannot just directly use feature extraction for each entry. 
+- [Anomaly Detection on Devices DNS Queries Using Deep Learning](https://www.sei.cmu.edu/library/anomaly-detection-on-devices-dns-queries-using-deep-learning/)
+- [ML for suspicious DNS query detection](https://medium.com/@myth7672/machine-learning-for-suspicious-dns-query-detection-5566f3aa9a52)
+
+
+![[AI_Scope.jpg]]
+
+Maybe try graph neural network:
+- [On Effectiveness of Graph Neural Network Architectures for Network Digital Twins (NDTs)](https://arxiv.org/html/2508.02373v1)
