@@ -7,12 +7,19 @@
 > Effective of tokenization on transformers for bio sequences
 > Build the testbed simplest tokenizer, model, benchmarks
 > make PLAN, focus on 80% first
+> ip- prefix - asn - org
 
+>https://ieeexplore.ieee.org/abstract/document/11103625
+>https://www.academia.edu/375399/What_is_a_Word_What_is_a_Sentence_Problems_of_Tokenisation
+>https://arxiv.org/abs/2403.06265
+>https://arxiv.org/abs/2402.18376
+>
+## AutoEncoder:
+
+[Intro](https://medium.com/@piyushkashyap045/a-comprehensive-guide-to-autoencoders-8b18b58c2ea6)
 
 ## Traditional Machine Learning (Why is it bad?)
 ## Deep Learning for Sequences
-
-ip- prefix - asn - org
 
 1. Tokenization:
 	1. Create a master list of every unique ASN that has ever appeared in a path.
