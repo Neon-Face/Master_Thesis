@@ -100,6 +100,6 @@ Webster, J., & Kit, C. (1992). **What is a Word? What is a Sentence? Problems of
 `https://arxiv.org/abs/2403.06265`
 
 
-> 69812379-3024-4761-960a-07bf45249afb
+ripe atlas doc: https://ripe-atlas-cousteau.readthedocs.io/en/latest/use.html#results
 
 data: https://ieee-dataport.org/documents/tartan-traceroute-dataset#files
