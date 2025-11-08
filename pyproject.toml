@@ -3,7 +3,7 @@ name = "master-thesis"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-    "pybgpstream>=2.0.2",
     "requests>=2.32.5",
+    "ripe-atlas-cousteau>=2.0.0",
     "setuptools>=80.9.0",
 ]
