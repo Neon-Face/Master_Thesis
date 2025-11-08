@@ -1,79 +1,105 @@
+Of course. Here is a formal thesis proposal written in the first person, incorporating all the concepts, arguments, and resources from our discussion. It is structured in a clear, academic format suitable for presentation to your professor.
 
->I want to investigate IP level data, instead of ASNs. So original thought is embed each unique IP address. for ipv4 there are 2^32, for ipv6 there are 2^128, it is impossible to put each of them as a node. so, now i need to design a tokenization method to tokenize IP address, instead of storing each possible ip address as a node, i decide to store ip-address-fragment as a node (for example 142.251 shows up a lot in my dataset, so it become a token), and the GNN is trained for learning the meaning among each ip-address-fragment i have. And when it comes to traceroute similarity look up. it rebuild the similar route based on ip-address-fragment.
+***
+
+# **Thesis Proposal: Learning Semantic Representations of Network Paths through Data-Driven Tokenization**
+
+## 1. Introduction and Problem Statement
+
+The analysis of network paths, primarily through traceroute data, is fundamental to internet operations, enabling tasks such as performance monitoring, fault diagnosis, and root cause analysis. As the volume of this historical data grows, there is a significant opportunity to apply machine learning techniques to automate these analyses, find meaningful signals in noisy data, and make robust inferences about network behavior.
+
+However, network path data is inherently complex: it is sequential, variable in length, and composed of specialized, structured elements (IP addresses, timeouts). A primary challenge in applying sequence-based machine learning models is determining the optimal method for representing this data. A naive approach, analogous to early methods in Natural Language Processing (NLP), is to treat each unique IP address as a distinct, atomic "word" or token. This method suffers from two critical flaws:
+
+1.  **Massive Vocabulary and Data Sparsity:** The IPv4 address space contains over four billion unique addresses. Even a large dataset will only cover a tiny fraction of this space, leading to an enormous and sparse vocabulary. This makes models inefficient and unable to handle previously unseen IP addresses—a common occurrence in a live network environment.
+2.  **Lack of Semantic Representation:** An IP address is not a random identifier; it is a structured entity containing a hierarchy of information (e.g., network prefixes that map to organizations and Autonomous Systems). The naive "one IP, one token" approach discards this rich structural information, treating `192.168.1.1` and `192.168.1.2` as having no more of a relationship than `192.168.1.1` and `8.8.8.8`.
+
+This proposal outlines a research project to systematically address this representational challenge. My work will focus on designing and evaluating tokenization strategies that can learn and exploit the inherent structure of internet data to create powerful, efficient models for network path analysis.
+
+## 2. Literature Review and Foundational Concepts
+
+This research is situated at the intersection of network engineering and modern machine learning, drawing direct inspiration from recent advancements in NLP.
+
+The core methodological precedent for this work comes from the bioinformatics domain. In their paper, **"Effect of tokenization on transformers for biological sequences" (Dotan et al., 2024)**, the authors demonstrate that moving beyond simple character-level tokenization to data-driven methods (like BPE and WordPiece) dramatically improves model performance and efficiency when analyzing DNA and protein sequences. This validates the principle that domain-specific, learned tokenization is a critical component for applying sequence models to non-linguistic data.
+
+Within the networking domain, the **IP2Vec project (Böhm et al., 2021)** established the viability of creating vector embeddings for individual IP addresses. IP2Vec successfully learns the *functional similarity* of IPs based on their communication patterns in NetFlow data. However, its methodology is predicated on a fixed tokenization scheme (one token per IP) and operates on unordered communication data, ignoring the crucial sequential nature of network paths.
+
+My research extends these foundational ideas. While IP2Vec learns the semantics *among* IPs, my work will explore the semantics *inside* the IP address itself. This distinction is fundamental and is motivated by the foundational NLP question of what constitutes a "word" or meaningful token in a given domain, as explored in papers like **"What is a Word? What is a Sentence? Problems of Tokenisation" (Webster & Kit, 1992)**. The goal is to move from a model that only understands the function of an IP to one that also understands its topological location and relationship to its neighbors.
+
+*Additional relevant research includes recent work on representation learning and its application in various domains, as seen in pre-prints such as `https://arxiv.org/abs/2403.06265` and `https://arxiv.org/abs/2402.18376`.*
+
+## 3. Core Thesis Idea and Hypothesis
+
+The central premise of this thesis is that an effective representation of network paths requires capturing semantics at two distinct scales:
+
+1.  **The "Inside IP" Scale (Structural Semantics):** This refers to the hierarchical information encoded within an IP address string, such as the network prefix (`/16`, `/24`), which implies topological proximity and organizational ownership.
+2.  **The "Among IPs" Scale (Contextual Semantics):** This refers to the relationships between IPs as they appear sequentially in a traceroute path, revealing the "grammar" of internet routing.
+
+The IP2Vec approach only addresses the contextual scale, and does so without considering sequence. My project will address both simultaneously. It will first solve the "Inside IP" problem through intelligent tokenization and then use a sequence model to learn the contextual patterns.
+
+**Hypothesis:**
+> I hypothesize that data-driven tokenization methods (e.g., BPE, WordPiece), which learn a vocabulary of meaningful sub-IP units like network prefixes, will produce superior network path embeddings compared to naive tokenization strategies. These superior embeddings will be demonstrated by:
+> 1. Higher accuracy on downstream tasks like path classification.
+> 2. Greater model robustness in handling unseen IP addresses.
+> 3. Increased computational efficiency by working with a smaller, more meaningful vocabulary.
+
+## 4. Proposed Methodology
+
+To test this hypothesis, I will follow a systematic, multi-stage methodology focused on representation learning using a sequence autoencoder.
+
+#### 4.1. Data Acquisition and Preprocessing
+I will source a large-scale traceroute dataset from public repositories such as **RIPE Atlas** and **CAIDA**. This data will be cleaned and normalized into a consistent format, with each traceroute represented as a space-separated sequence of IP hops and timeout markers (`*`).
+
+#### 4.2. The Tokenization Experiment
+The core of my experiment will be a comparison of several tokenization strategies:
+*   **Baseline 1 ("Full IP"):** The IP2Vec approach, where each unique IP address is a single token.
+*   **Baseline 2 ("Octet-level"):** A simple structural tokenizer where each IP is split into its constituent octets and delimiters (e.g., `130`, `.`, `57`, `.`, `22`, `.`, `1`).
+*   **Data-Driven Tokenizers:** I will train several tokenizers on the traceroute corpus to learn a domain-specific vocabulary.
+    *   **Byte-Pair Encoding (BPE)**
+    *   **WordPiece**
+    *   **Unigram**
+For each data-driven method, I will experiment with multiple vocabulary sizes (e.g., 1k, 5k, 10k) to analyze the trade-off between vocabulary size and performance.
+
+#### 4.3. Model Architecture: Sequence Autoencoder
+Instead of a large pre-trained model like BERT, I will use a **Sequence Autoencoder** (implemented with LSTMs or Transformers). The model's purpose is to learn a compressed, fixed-size vector representation (embedding) of a variable-length tokenized traceroute. The autoencoder will consist of an encoder, which maps the input sequence to the embedding, and a decoder, which attempts to reconstruct the original sequence from the embedding.
+
+#### 4.4. Training Task: Denoising Reconstruction
+The autoencoder will be trained on a **denoising reconstruction** task. For each input sequence, I will randomly mask or drop a certain percentage of its tokens. The model's objective will be to reconstruct the original, un-corrupted sequence. This forces the model to learn the underlying "grammar" and valid structure of network paths.
+
+#### 4.5. Evaluation Strategy
+The quality of the learned embeddings from each tokenizer will be evaluated both quantitatively and qualitatively.
+1.  **Downstream Task Performance (Quantitative):** The trained, frozen encoder will be used to generate embeddings for a labeled traceroute dataset (e.g., labeled by destination AS). A simple classifier (e.g., Logistic Regression) will be trained on these embeddings. The primary metric will be the classifier's performance **(Matthew's Correlation Coefficient - MCC)**, which indicates the quality and separability of the embeddings.
+2.  **Model Efficiency (Quantitative):** I will measure the **Sequence Length Reduction** achieved by each tokenizer relative to the baseline. Results will be presented on a 2D plot of MCC vs. Length Reduction to visualize the performance-efficiency trade-off.
+3.  **Latent Space Visualization (Qualitative):** I will use dimensionality reduction techniques (t-SNE, UMAP) to project the generated path embeddings into a 2D space. Visualizing clear clusters of related paths (e.g., paths going to the same provider) will provide strong intuitive evidence of the model's learning success.
+4.  **Vocabulary Inspection (Qualitative):** I will analyze the vocabularies learned by the data-driven tokenizers to confirm that they have discovered meaningful structural units like common network prefixes.
+
+## 5. Expected Outcomes and Contributions
+
+This research is expected to produce the following outcomes:
+
+1.  A systematic comparison of tokenization strategies for network path data.
+2.  A trained sequence autoencoder model capable of generating high-quality vector embeddings for traceroutes.
+3.  Clear evidence demonstrating the advantages of data-driven, sub-IP tokenization over naive methods.
+4.  A novel contribution to the field of network analysis by providing a robust methodology for applying modern sequence modeling techniques to path data, enabling more sophisticated root cause analysis and predictive modeling.
+
+## 6. Tentative Timeline
+*   **Weeks 1-4:** Literature Review, Finalizing Proposal, and Data Sourcing.
+*   **Weeks 5-8:** Data Cleaning, Preprocessing, and Implementation of Tokenizer Training Pipeline.
+*   **Weeks 9-14:** Implementation and Training of Sequence Autoencoder Models for each Tokenizer.
+*   **Weeks 15-18:** Implementation and Execution of Downstream Evaluation Tasks and Generation of Results.
+*   **Weeks 19-24:** Analysis of Results, Thesis Writing, and Final Presentation.
+
+## 7. References
+
+Böhm, C., Nerling, L., Schuchard, M., & Paxson, V. (2021). **IP2Vec: Learning Similarities Between IP Addresses.** *IEEE European Symposium on Security and Privacy (EuroS&P)*. `https://ieeexplore.ieee.org/abstract/document/11103625`
+
+Dotan, E., Jaschek, G., Pupko, T., & Belinkov, Y. (2024). **Effect of tokenization on transformers for biological sequences.** *Bioinformatics, 40(4)*. `https://arxiv.org/abs/2402.18376`
+
+Webster, J., & Kit, C. (1992). **What is a Word? What is a Sentence? Problems of Tokenisation.** *COLING-92*. `https://www.academia.edu/375399/What_is_a_Word_What_is_a_Sentence_Problems_of_Tokenisation`
+
+*Additional Cited Works:*
+`https://arxiv.org/abs/2403.06265`
 
 
->historical data, noisy data, want to make inferences, find correct signal, build up to the proposal
->Control variables, tokenizer papers, 
-> Effective of tokenization on transformers for bio sequences
-> Build the testbed simplest tokenizer, model, benchmarks
-> make PLAN, focus on 80% first
-> ip- prefix - asn - org
+> 69812379-3024-4761-960a-07bf45249afb
 
->https://ieeexplore.ieee.org/abstract/document/11103625
->https://www.academia.edu/375399/What_is_a_Word_What_is_a_Sentence_Problems_of_Tokenisation
->https://arxiv.org/abs/2403.06265
->https://arxiv.org/abs/2402.18376
->
-## AutoEncoder:
-
-[Intro](https://medium.com/@piyushkashyap045/a-comprehensive-guide-to-autoencoders-8b18b58c2ea6)
-
-## Traditional Machine Learning (Why is it bad?)
-## Deep Learning for Sequences
-
-1. Tokenization:
-	1. Create a master list of every unique ASN that has ever appeared in a path.
-	2. Each unique ASN is assigned a unique integer ID. (Tokenized)
-2. Embedding:
-	1. Assign a random vector to each token in your vocabulary.
-	2. Learn from context (notices that token 4 and token 3 often appear in similar contexts)
-	3. Gradually adjusts the embedding vectors.
-	4. Outcome of this step: Each token ID maps to a rich, meaningful vector.
-3. Create a Vector for the Entire Path (Sequence Modeling)
-	- Simple Way: Pooling / Averaging
-		- Pros: Very fast and simple.
-		- Cons: It's a "bag of words" approach. It loses the crucial order of the hops. A -> B -> C would have the same final vector as C -> B -> A.
-	- Sequence Models (RNN/LSTM/Transformer)
-		1. Read the Sequence: The model reads the embedding vectors for your path one by one: vector_hop1, then vector_hop2, etc.
-		2. Maintain a "Memory"
-		3. Final Representation: The final value of this hidden state, after reading the entire path, becomes the single, context-aware vector for the entire traceroute. This vector now understands that Cogent -> Google is different from Google -> Cogent.
-4. Finding Similarity
-	1. A new problematic traceroute arrives. It goes through the full pipeline (tokenize -> embed -> sequence model) and is converted into its vector, let's call it V_problem.
-	2. Use Cosine Similarity to calculate the "angle" between V_problem and every other vector in your database.
-	3. You sort the results and get the top k traceroutes that are most similar to your problem path.
-
-## Graph Neural Networks
-
-1.  Graph Construction
-    1.  Create a Node for every unique ASN that has ever appeared in a path.
-    2.  Create a directed Edge for every observed connection between two ASNs in a path.
-    3.  (Optional) Add weights to each edge to store information like average latency or frequency of the connection.
-2.  Initial Node Representation (Initial Features)
-    1.  Assign a starting feature vector to every Node (ASN) in the graph.
-    2.  This is typically a One-Hot Encoded vector, where each Node's initial feature is simply its own unique identity. This initial vector is called `H^(0)`.
-3.  Learning Node Embeddings (Message Passing)
-    *   This is the core GNN process. It is performed in layers, where each layer allows nodes to learn from their neighbors.
-    *   Single GNN Layer:
-        1.  Aggregation ("Gathering Information"): For every node, the GNN collects the feature vectors of all its immediate neighbors and aggregates them into a single summary vector (e.g., by taking the mean).
-        2.  Update ("Updating Opinion"): The GNN takes the aggregated neighbor vector and the node's own vector from the previous layer (`H^(0)`) and feeds them through a small neural network. The output becomes the node's new, more informed vector for the next layer (`H^(1)`).
-    *   Stacking GNN Layers:
-        1.  This process is repeated for multiple layers.
-        2.  After 1 layer, a node's vector contains information about its direct neighbors (1-hop neighborhood).
-        3.  After 'k' layers, a node's final vector (`H^(k)`) is a rich, dense embedding that represents its role and position within its k-hop neighborhood on the graph.
-4.  Create a Vector for the Entire Path
-    1.  A new traceroute arrives (e.g., `ASN_X -> ASN_Y -> ASN_Z`).
-    2.  Look up the final, fully-trained embedding vectors for each node in the path: `H_X^(k)`, `H_Y^(k)`, `H_Z^(k)`.
-    3.  Aggregate these powerful node vectors to get a single vector for the whole path.
-        *   Simple Way: Pooling / Averaging
-            *   Cons: Loses the specific order of the hops within the path.
-        *   Powerful Way: Sequence Models (RNN/LSTM)
-            *   Read the sequence of node embedding vectors: `vector_X`, `vector_Y`, `vector_Z`.
-            *   The sequence model's final state becomes the single, order-aware vector for the entire traceroute path.
-5.  Finding Similarity
-    1.  A new problematic traceroute is converted into its final path vector using the full pipeline, let's call it `V_problem`.
-    2.  Use Cosine Similarity to calculate the "angle" between `V_problem` and every other path vector in your database.
-    3.  You sort the results and get the top k traceroutes that are most structurally similar within the context of the entire network map.
-
-## BPE doesn't work for data X?
-
-Limit the input data to only internet data we want to explore (only IP address in this case)
+data: https://ieee-dataport.org/documents/tartan-traceroute-dataset#files
