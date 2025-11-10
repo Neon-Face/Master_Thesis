@@ -1,105 +1,96 @@
-Of course. Here is a formal thesis proposal written in the first person, incorporating all the concepts, arguments, and resources from our discussion. It is structured in a clear, academic format suitable for presentation to your professor.
+Of course. This is the perfect next step. Presenting a focused, well-researched, and detailed plan is the best way to have a productive discussion with your professor.
+
+Here is a comprehensive article-style proposal for the BGP Hijack Detection project. It incorporates your reasoning, performs a targeted review of recent academic work, clearly defines your novelty, and lays out a concrete project plan.
 
 ***
 
-# **Thesis Proposal: Learning Semantic Representations of Network Paths through Data-Driven Tokenization**
+## **Thesis Proposal: Learning the Grammar of Global Routing for Real-Time BGP Hijack Detection**
 
-## 1. Introduction and Problem Statement
+### **Executive Summary**
 
-The analysis of network paths, primarily through traceroute data, is fundamental to internet operations, enabling tasks such as performance monitoring, fault diagnosis, and root cause analysis. As the volume of this historical data grows, there is a significant opportunity to apply machine learning techniques to automate these analyses, find meaningful signals in noisy data, and make robust inferences about network behavior.
+The Border Gateway Protocol (BGP) is the foundational pillar of the internet's routing system, yet it remains fundamentally insecure and vulnerable to malicious attacks such as prefix hijacking. While numerous methods for BGP anomaly detection exist, many rely on hand-crafted features that may fail to capture the complex, evolving patterns of global routing. This thesis proposes a novel, end-to-end deep learning methodology to address this challenge. My approach treats the BGP Autonomous System (AS) Path as a sequential language and learns its "grammar" to detect anomalies. The core innovation lies in a two-phase process: **(1)** A data-driven BPE (Byte-Pair Encoding) tokenizer will be trained on a massive corpus of BGP data to learn a vocabulary of meaningful, common AS Path "phrases" or sub-sequences. **(2)** A Transformer-based autoencoder will then be trained on these tokenized paths to learn a deep representation of legitimate routing behavior. Anomalies, such as hijacks, will be detected in real-time as paths that the model fails to reconstruct with high fidelity. I hypothesize this learned-grammar approach will outperform traditional feature-based methods and existing deep learning models by providing a more robust and generalizable understanding of valid routing structure.
 
-However, network path data is inherently complex: it is sequential, variable in length, and composed of specialized, structured elements (IP addresses, timeouts). A primary challenge in applying sequence-based machine learning models is determining the optimal method for representing this data. A naive approach, analogous to early methods in Natural Language Processing (NLP), is to treat each unique IP address as a distinct, atomic "word" or token. This method suffers from two critical flaws:
+---
 
-1.  **Massive Vocabulary and Data Sparsity:** The IPv4 address space contains over four billion unique addresses. Even a large dataset will only cover a tiny fraction of this space, leading to an enormous and sparse vocabulary. This makes models inefficient and unable to handle previously unseen IP addresses—a common occurrence in a live network environment.
-2.  **Lack of Semantic Representation:** An IP address is not a random identifier; it is a structured entity containing a hierarchy of information (e.g., network prefixes that map to organizations and Autonomous Systems). The naive "one IP, one token" approach discards this rich structural information, treating `192.168.1.1` and `192.168.1.2` as having no more of a relationship than `192.168.1.1` and `8.8.8.8`.
+### **1. Problem Statement & Motivation: The Internet's Trust Problem**
 
-This proposal outlines a research project to systematically address this representational challenge. My work will focus on designing and evaluating tokenization strategies that can learn and exploit the inherent structure of internet data to create powerful, efficient models for network path analysis.
+The stability and security of the global internet depend entirely on the BGP protocol. BGP allows independent networks (Autonomous Systems) to announce which IP address prefixes they can reach, forming a chain of trust that creates the global routing table. However, this trust is frequently violated. A BGP hijack occurs when an AS illegitimately announces that it is the origin for an IP prefix it does not own, causing traffic to be misdirected, often for malicious purposes like data theft or denial of service. Famous incidents, such as the 2008 Pakistan-YouTube hijack, have demonstrated the catastrophic potential of these events.
 
-## 2. Literature Review and Foundational Concepts
+The problem you are solving—BGP anomaly and hijack detection—is a critical, ongoing security issue for every major network on the planet. A successful model from your research wouldn't just be an academic curiosity; it would be the blueprint for a system that an ISP, a cloud provider, or a financial institution would want to deploy immediately. The application is a direct, real-time security control, not just an analysis tool.
 
-This research is situated at the intersection of network engineering and modern machine learning, drawing direct inspiration from recent advancements in NLP.
+### **2. The Data: Unimpeachable Real-World Fidelity**
 
-The core methodological precedent for this work comes from the bioinformatics domain. In their paper, **"Effect of tokenization on transformers for biological sequences" (Dotan et al., 2024)**, the authors demonstrate that moving beyond simple character-level tokenization to data-driven methods (like BPE and WordPiece) dramatically improves model performance and efficiency when analyzing DNA and protein sequences. This validates the principle that domain-specific, learned tokenization is a critical component for applying sequence models to non-linguistic data.
+This is the strongest argument for the BGP use case. The data you will use from **RIPE RIS (Routing Information Service)** and **Route Views** is not a sample or a proxy; it **IS** the real-world data. These public collectors listen to the same BGP messages that route the global internet. When you test your model on a historical dataset of a known hijack, you are working with the literal ground truth of that event. There is zero gap between your experiment and reality in this regard, allowing the results of this thesis to be claimed as directly applicable to real-world scenarios without qualification.
 
-Within the networking domain, the **IP2Vec project (Böhm et al., 2021)** established the viability of creating vector embeddings for individual IP addresses. IP2Vec successfully learns the *functional similarity* of IPs based on their communication patterns in NetFlow data. However, its methodology is predicated on a fixed tokenization scheme (one token per IP) and operates on unordered communication data, ignoring the crucial sequential nature of network paths.
+*   **Training Corpus:** A multi-terabyte dataset of BGP UPDATE messages from a "known-good" period (e.g., one month) will be sourced from RIPE RIS archives.
+*   **Test Data:** Labeled historical hijack events will be used for evaluation.
 
-My research extends these foundational ideas. While IP2Vec learns the semantics *among* IPs, my work will explore the semantics *inside* the IP address itself. This distinction is fundamental and is motivated by the foundational NLP question of what constitutes a "word" or meaningful token in a given domain, as explored in papers like **"What is a Word? What is a Sentence? Problems of Tokenisation" (Webster & Kit, 1992)**. The goal is to move from a model that only understands the function of an IP to one that also understands its topological location and relationship to its neighbors.
+### **3. Proposed Methodology: A Two-Phase Deep Learning Approach**
 
-*Additional relevant research includes recent work on representation learning and its application in various domains, as seen in pre-prints such as `https://arxiv.org/abs/2403.06265` and `https://arxiv.org/abs/2402.18376`.*
+My methodology treats the AS_PATH as a sequence. The core hypothesis is that legitimate routing paths follow a learnable "grammar," while hijacks are "ungrammatical."
 
-## 3. Core Thesis Idea and Hypothesis
+#### **Phase 1: The BPE Tokenizer - Learning Routing "Phrases"**
+The first and most novel step is to move beyond treating each ASN as an atomic "word." I will train a Byte-Pair Encoding (BPE) tokenizer on the raw AS_PATHs from my training corpus.
 
-The central premise of this thesis is that an effective representation of network paths requires capturing semantics at two distinct scales:
+*   **Process:** The tokenizer will start with a vocabulary of all individual ASNs. It will then iteratively find the most frequently co-occurring adjacent pair of tokens (e.g., `AS174 AS3356`) and merge them into a new, single token.
+*   **Outcome:** The result is a learned vocabulary not just of individual ASNs, but of common, multi-AS "phrases" that represent the superhighways and common peering relationships of the internet. This allows the model to learn that a legitimate pattern like AS Path prepending (`AS701 AS701 AS701`) is a single, normal token, while a malicious loop (`AS-Y -> AS-Z -> AS-Y`) is a sequence of rare, low-probability tokens.
 
-1.  **The "Inside IP" Scale (Structural Semantics):** This refers to the hierarchical information encoded within an IP address string, such as the network prefix (`/16`, `/24`), which implies topological proximity and organizational ownership.
-2.  **The "Among IPs" Scale (Contextual Semantics):** This refers to the relationships between IPs as they appear sequentially in a traceroute path, revealing the "grammar" of internet routing.
+#### **Phase 2: The Transformer Autoencoder - Learning "Grammar"**
+The tokenized AS_PATHs will be used to train a Transformer-based autoencoder.
 
-The IP2Vec approach only addresses the contextual scale, and does so without considering sequence. My project will address both simultaneously. It will first solve the "Inside IP" problem through intelligent tokenization and then use a sequence model to learn the contextual patterns.
+*   **Architecture:** The Transformer is the ideal choice due to its use of **Positional Encodings**, which inherently understands that the position of a token in the path matters (i.e., the origin AS is different from a transit AS).
+*   **Training Task:** The model will be trained on a **denoising reconstruction** task. It will be given a corrupted (token-masked) AS_PATH and must learn to reconstruct the original, correct path.
+*   **Anomaly Detection:** Once trained, the model will process live BGP updates. A hijack will be flagged if the model exhibits a **high reconstruction error** or assigns a **very low probability** to the observed sequence of tokens, indicating the path is "ungrammatical" and unlike any legitimate path it has ever seen.
 
-**Hypothesis:**
-> I hypothesize that data-driven tokenization methods (e.g., BPE, WordPiece), which learn a vocabulary of meaningful sub-IP units like network prefixes, will produce superior network path embeddings compared to naive tokenization strategies. These superior embeddings will be demonstrated by:
-> 1. Higher accuracy on downstream tasks like path classification.
-> 2. Greater model robustness in handling unseen IP addresses.
-> 3. Increased computational efficiency by working with a smaller, more meaningful vocabulary.
+### **4. Literature Review and Statement of Novelty**
 
-## 4. Proposed Methodology
+BGP anomaly detection is a well-established field. My work builds upon prior research while introducing key innovations.
 
-To test this hypothesis, I will follow a systematic, multi-stage methodology focused on representation learning using a sequence autoencoder.
+A recent Google Scholar search reveals several key trends:
+*   **Feature-Based ML:** Many systems use traditional machine learning (SVM, Random Forests) on hand-crafted features like AS-path length, prefix characteristics, and historical stability (e.g., BGP-iSec).
+*   **RNN/LSTM Models:** More recent deep learning approaches have used LSTMs to model the AS_PATH as a sequence (e.g., "DeepBGP"). These models typically treat each ASN as a unique, one-hot encoded token.
+*   **Graph Neural Networks (GNNs):** Some state-of-the-art research models the internet as a graph and uses GNNs to detect anomalous links.
 
-#### 4.1. Data Acquisition and Preprocessing
-I will source a large-scale traceroute dataset from public repositories such as **RIPE Atlas** and **CAIDA**. This data will be cleaned and normalized into a consistent format, with each traceroute represented as a space-separated sequence of IP hops and timeout markers (`*`).
+My proposal is novel and distinct from these approaches in several critical ways:
 
-#### 4.2. The Tokenization Experiment
-The core of my experiment will be a comparison of several tokenization strategies:
-*   **Baseline 1 ("Full IP"):** The IP2Vec approach, where each unique IP address is a single token.
-*   **Baseline 2 ("Octet-level"):** A simple structural tokenizer where each IP is split into its constituent octets and delimiters (e.g., `130`, `.`, `57`, `.`, `22`, `.`, `1`).
-*   **Data-Driven Tokenizers:** I will train several tokenizers on the traceroute corpus to learn a domain-specific vocabulary.
-    *   **Byte-Pair Encoding (BPE)**
-    *   **WordPiece**
-    *   **Unigram**
-For each data-driven method, I will experiment with multiple vocabulary sizes (e.g., 1k, 5k, 10k) to analyze the trade-off between vocabulary size and performance.
+| Paper/Approach | Methodology | How My Proposal is Different (Novelty) |
+| :--- | :--- | :--- |
+| **Traditional Feature-Based ML** | Hand-crafted features (path length, etc.) + SVM/Random Forest. | My approach is **end-to-end**. It *learns* the important features directly from the data, rather than relying on a pre-defined, potentially incomplete set. |
+| **LSTM-based Models ("DeepBGP")** | LSTM/RNN on sequences of one-hot encoded ASNs. | **The Tokenizer is my key innovation.** While LSTMs treat the path as a sequence of "words" (ASNs), my BPE tokenizer allows the model to learn the structure of routing "phrases" (multi-AS sub-paths), leading to a richer and more robust understanding of path grammar. |
+| **Graph Neural Networks (GNNs)** | Models the internet AS-graph and looks for anomalous edges or properties. | GNNs are excellent at modeling the static graph, but my approach is designed to model the **dynamic, sequential nature of the AS_PATH language itself**. It can capture anomalies that are valid in the graph but highly improbable as a sequence. |
 
-#### 4.3. Model Architecture: Sequence Autoencoder
-Instead of a large pre-trained model like BERT, I will use a **Sequence Autoencoder** (implemented with LSTMs or Transformers). The model's purpose is to learn a compressed, fixed-size vector representation (embedding) of a variable-length tokenized traceroute. The autoencoder will consist of an encoder, which maps the input sequence to the embedding, and a decoder, which attempts to reconstruct the original sequence from the embedding.
+In summary, the primary contribution of this thesis is the introduction of **data-driven, sub-path tokenization** to the problem of BGP security, moving the state-of-the-art from a "word-level" understanding to a more powerful "phrase-level" understanding of routing grammar.
 
-#### 4.4. Training Task: Denoising Reconstruction
-The autoencoder will be trained on a **denoising reconstruction** task. For each input sequence, I will randomly mask or drop a certain percentage of its tokens. The model's objective will be to reconstruct the original, un-corrupted sequence. This forces the model to learn the underlying "grammar" and valid structure of network paths.
+### **5. Project Plan and Timeline**
 
-#### 4.5. Evaluation Strategy
-The quality of the learned embeddings from each tokenizer will be evaluated both quantitatively and qualitatively.
-1.  **Downstream Task Performance (Quantitative):** The trained, frozen encoder will be used to generate embeddings for a labeled traceroute dataset (e.g., labeled by destination AS). A simple classifier (e.g., Logistic Regression) will be trained on these embeddings. The primary metric will be the classifier's performance **(Matthew's Correlation Coefficient - MCC)**, which indicates the quality and separability of the embeddings.
-2.  **Model Efficiency (Quantitative):** I will measure the **Sequence Length Reduction** achieved by each tokenizer relative to the baseline. Results will be presented on a 2D plot of MCC vs. Length Reduction to visualize the performance-efficiency trade-off.
-3.  **Latent Space Visualization (Qualitative):** I will use dimensionality reduction techniques (t-SNE, UMAP) to project the generated path embeddings into a 2D space. Visualizing clear clusters of related paths (e.g., paths going to the same provider) will provide strong intuitive evidence of the model's learning success.
-4.  **Vocabulary Inspection (Qualitative):** I will analyze the vocabularies learned by the data-driven tokenizers to confirm that they have discovered meaningful structural units like common network prefixes.
+This project is structured into five distinct phases over an estimated 24-week period.
 
-## 5. Expected Outcomes and Contributions
+| Phase | Duration | Key Tasks | Deliverable |
+| :--- | :--- | :--- | :--- |
+| **1. Foundation & Data Pipeline** | Weeks 1-4 | Finalize literature review. Set up data acquisition pipeline using Py-BGPStream. Download and parse RIPE RIS training/testing data. | A clean, multi-terabyte corpus of AS_PATHs and labeled hijack events. |
+| **2. Tokenizer Development** | Weeks 5-8 | Implement and train the BPE tokenizer on the full training corpus. Perform qualitative validation of the learned vocabulary. | A trained, production-ready tokenizer for AS_PATHs. |
+| **3. Model Implementation & Training** | Weeks 9-16 | Implement the Transformer-based autoencoder in PyTorch. Train the model on the tokenized training data. Tune hyperparameters. | A trained autoencoder model capable of reconstructing legitimate AS_PATHs. |
+| **4. Evaluation & Comparison** | Weeks 17-20 | Implement baseline models (feature-based and LSTM). Evaluate all models against the historical hijack test set. Analyze performance (F1, Precision, Recall). | A comprehensive set of results, graphs, and tables comparing the models. |
+| **5. Thesis Writing & Defense** | Weeks 21-24 | Synthesize results, write thesis chapters, and prepare final presentation. | Completed Master's Thesis. |
 
-This research is expected to produce the following outcomes:
+### **6. Alternative Research Directions**
 
-1.  A systematic comparison of tokenization strategies for network path data.
-2.  A trained sequence autoencoder model capable of generating high-quality vector embeddings for traceroutes.
-3.  Clear evidence demonstrating the advantages of data-driven, sub-IP tokenization over naive methods.
-4.  A novel contribution to the field of network analysis by providing a robust methodology for applying modern sequence modeling techniques to path data, enabling more sophisticated root cause analysis and predictive modeling.
+While the BGP use case is the primary focus due to its high impact and data fidelity, the core methodology of this thesis is highly generalizable. Should the initial research prove challenging, or for future work, the following directions are also viable:
 
-## 6. Tentative Timeline
-*   **Weeks 1-4:** Literature Review, Finalizing Proposal, and Data Sourcing.
-*   **Weeks 5-8:** Data Cleaning, Preprocessing, and Implementation of Tokenizer Training Pipeline.
-*   **Weeks 9-14:** Implementation and Training of Sequence Autoencoder Models for each Tokenizer.
-*   **Weeks 15-18:** Implementation and Execution of Downstream Evaluation Tasks and Generation of Results.
-*   **Weeks 19-24:** Analysis of Results, Thesis Writing, and Final Presentation.
+*   **Alternative 1: Traceroute Path Analysis (High Methodological Novelty):** Apply the same tokenizer/autoencoder framework to sequences of IP addresses from RIPE Atlas and CAIDA traceroutes. The goal would be to learn embeddings for network paths to enable novel forms of path similarity analysis and root cause detection for network performance issues. This is a robust academic project with extremely high feasibility.
+*   **Alternative 2: DNS Malicious Domain Detection (High Security Impact):** Apply the methodology to character-level sequences of domain names to detect those generated by malware (DGAs). While the real-world impact is enormous, this direction faces significant challenges in acquiring high-fidelity, non-proxy data, making it better suited for future work.
 
-## 7. References
+### **7. Conclusion**
 
-Böhm, C., Nerling, L., Schuchard, M., & Paxson, V. (2021). **IP2Vec: Learning Similarities Between IP Addresses.** *IEEE European Symposium on Security and Privacy (EuroS&P)*. `https://ieeexplore.ieee.org/abstract/document/11103625`
+This thesis proposes a novel and impactful approach to a critical internet security problem. By combining a data-driven tokenization strategy with a state-of-the-art Transformer architecture, this research aims to significantly advance the field of BGP hijack detection. The project is well-defined, leverages high-fidelity real-world data, and is structured with a clear and achievable plan.
 
-Dotan, E., Jaschek, G., Pupko, T., & Belinkov, Y. (2024). **Effect of tokenization on transformers for biological sequences.** *Bioinformatics, 40(4)*. `https://arxiv.org/abs/2402.18376`
+https://ieeexplore.ieee.org/abstract/document/9754706
 
-Webster, J., & Kit, C. (1992). **What is a Word? What is a Sentence? Problems of Tokenisation.** *COLING-92*. `https://www.academia.edu/375399/What_is_a_Word_What_is_a_Sentence_Problems_of_Tokenisation`
-
-*Additional Cited Works:*
-`https://arxiv.org/abs/2403.06265`
+Questions:
+1. teach me why 30.57.1.1 and 130.57.2.2 are topologically "close."
+2. whats the point of figuring out **Path Similarity**
 
 
-ripe atlas doc: https://ripe-atlas-cousteau.readthedocs.io/en/latest/use.html#results
-
-data: https://ieee-dataport.org/documents/tartan-traceroute-dataset#files
+```
+ https://data.ris.ripe.net/rrc03/2025.10/update.20251014.0000.gz
+```
