@@ -59,3 +59,131 @@ Epoch 10/10 | Time: 570.92s
   -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
 
 --- Training Complete ---
+
+(master-thesis) lucas@neonface demo % python 4_train_autoencoder.py --tokenizer_type wordpiece --epochs 10 --batch_size 64
+Using device: mps
+Tokenizer 'wordpiece' loaded. Vocab size: 8651
+Loading and preparing data from data/train.txt...
+Loaded 127378 lines.
+Loading and preparing data from data/validation.txt...
+Loaded 15922 lines.
+
+--- Starting Training ---
+
+Epoch 1/10 | Time: 364.77s
+  -> Train Loss: 2.7030
+  -> Val Loss:   1.0917
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+
+Epoch 2/10 | Time: 2628.29s
+  -> Train Loss: 0.7016
+  -> Val Loss:   0.4813
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 3/10 | Time: 337.73s
+  -> Train Loss: 0.3454
+  -> Val Loss:   0.2876
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 4/10 | Time: 437.09s
+  -> Train Loss: 0.2071
+  -> Val Loss:   0.1967
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 5/10 | Time: 471.89s
+  -> Train Loss: 0.1347
+  -> Val Loss:   0.1468
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 6/10 | Time: 526.87s
+  -> Train Loss: 0.0917
+  -> Val Loss:   0.1175
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 7/10 | Time: 508.04s
+  -> Train Loss: 0.0647
+  -> Val Loss:   0.1006
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 8/10 | Time: 522.58s
+  -> Train Loss: 0.0472
+  -> Val Loss:   0.0900
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 9/10 | Time: 527.50s
+  -> Train Loss: 0.0353
+  -> Val Loss:   0.0833
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+Epoch 10/10 | Time: 545.38s
+  -> Train Loss: 0.0267
+  -> Val Loss:   0.0788
+  -> Validation loss improved. Saving model to 'models/autoencoder_wordpiece_best.pth'
+
+--- Training Complete ---
+
+
+(master-thesis) lucas@neonface demo % python 4_train_autoencoder.py --tokenizer_type unigram --epochs 10 --batch_size 64
+Using device: mps
+Tokenizer 'unigram' loaded. Vocab size: 2256
+Loading and preparing data from data/train.txt...
+Loaded 127378 lines.
+Loading and preparing data from data/validation.txt...
+Loaded 15922 lines.
+
+--- Starting Training ---
+
+Epoch 1/10 | Time: 165.57s
+  -> Train Loss: 0.7707
+  -> Val Loss:   0.0696
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 2/10 | Time: 212.03s
+  -> Train Loss: 0.0293
+  -> Val Loss:   0.0107
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 3/10 | Time: 221.77s
+  -> Train Loss: 0.0053
+  -> Val Loss:   0.0027
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 4/10 | Time: 221.79s
+  -> Train Loss: 0.0015
+  -> Val Loss:   0.0009
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 5/10 | Time: 1141.79s
+  -> Train Loss: 0.0005
+  -> Val Loss:   0.0004
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 6/10 | Time: 534.51s
+  -> Train Loss: 0.0002
+  -> Val Loss:   0.0002
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 7/10 | Time: 1196.85s
+  -> Train Loss: 0.0001
+  -> Val Loss:   0.0001
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 8/10 | Time: 1473.87s
+  -> Train Loss: 0.0000
+  -> Val Loss:   0.0001
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 9/10 | Time: 160.54s
+  -> Train Loss: 0.0000
+  -> Val Loss:   0.0001
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+Epoch 10/10 | Time: 174.85s
+  -> Train Loss: 0.0000
+  -> Val Loss:   0.0001
+  -> Validation loss improved. Saving model to 'models/autoencoder_unigram_best.pth'
+
+--- Training Complete ---
+
+https://data.ris.ripe.net/rrc03/2025.11/bview.20251111.0000.gz

@@ -1,5 +1,9 @@
 .obsidian
 .venv
 .env
-models
-MRT
+demo/tokenizer
+demo/data   
+demo/models
+demo/__pycache__
+demo/*.pyc
+results
