@@ -1,0 +1,61 @@
+(master-thesis) lucas@neonface Master_Thesis % python train_autoencoder.py --tokenizer_type bpe --epochs 10 --batch_size 64
+Using device: mps
+Tokenizer 'bpe' loaded. Vocab size: 8191
+Loading and preparing data from train.txt...
+Loaded 127378 lines.
+Loading and preparing data from validation.txt...
+Loaded 15922 lines.
+
+--- Starting Training ---
+
+Epoch 1/10 | Time: 381.10s
+  -> Train Loss: 2.6926
+  -> Val Loss:   1.0846
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 2/10 | Time: 455.11s
+  -> Train Loss: 0.6963
+  -> Val Loss:   0.4784
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 3/10 | Time: 493.54s
+  -> Train Loss: 0.3432
+  -> Val Loss:   0.2860
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 4/10 | Time: 487.88s
+  -> Train Loss: 0.2057
+  -> Val Loss:   0.1956
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 5/10 | Time: 501.04s
+  -> Train Loss: 0.1335
+  -> Val Loss:   0.1465
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 6/10 | Time: 561.48s
+  -> Train Loss: 0.0908
+  -> Val Loss:   0.1173
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 7/10 | Time: 512.12s
+  -> Train Loss: 0.0639
+  -> Val Loss:   0.1007
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 8/10 | Time: 490.44s
+  -> Train Loss: 0.0464
+  -> Val Loss:   0.0900
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 9/10 | Time: 536.19s
+  -> Train Loss: 0.0347
+  -> Val Loss:   0.0837
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+Epoch 10/10 | Time: 570.92s
+  -> Train Loss: 0.0263
+  -> Val Loss:   0.0784
+  -> Validation loss improved. Saving model to 'models/autoencoder_bpe_best.pth'
+
+--- Training Complete ---

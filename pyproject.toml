@@ -3,7 +3,14 @@ name = "master-thesis"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
+    "matplotlib>=3.10.7",
+    "mrtparse>=2.2.0",
     "requests>=2.32.5",
     "ripe-atlas-cousteau>=2.0.0",
+    "scikit-learn>=1.7.2",
     "setuptools>=80.9.0",
+    "tokenizers>=0.22.1",
+    "torch>=2.9.0",
+    "torchaudio>=2.9.0",
+    "torchvision>=0.24.0",
 ]
