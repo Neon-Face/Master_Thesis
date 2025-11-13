@@ -94,3 +94,6 @@ Questions:
 ```
 https://data.ris.ripe.net/rrc03/2025.11/bview.20251111.0000.gz
 ```
+
+https://data.ris.ripe.net/rrc03/2025.11/updates.20251111.0000.gz
+https://data.ris.ripe.net/rrc03/2025.11/bview.20251111.0000.gz

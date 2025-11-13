@@ -1,9 +1,10 @@
 .obsidian
 .venv
 .env
-demo/tokenizer
+demo/tokenizers
 demo/data   
 demo/models
 demo/__pycache__
 demo/*.pyc
 results
+.DS_Store
