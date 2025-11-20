@@ -38,3 +38,12 @@ for this, my original plan was to investigate which Vocabulary Construction Meth
 Q9.
 what does this mean: "A 0x0800 representing the EtherType for IP is semantically different from a 0x0800 that happens to appear in a TCP payload. The tokenizer is blind to this."
 
+Q10
+Sub-word of an IPv6 Address might work, but sub-word of an ASN may not because it doesnt have sementic meaning?
+
+Q11
+please compare diffusion model and autoregressive model, no analogy
+
+Q12
+
+
